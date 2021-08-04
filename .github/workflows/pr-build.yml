@@ -1,0 +1,85 @@
+name: CI-Build
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - main
+jobs:
+
+  build_llvm_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Build LLVM
+        run: ./Build-Llvm.ps1
+        shell: pwsh
+
+      - name: Move LLVM binaries
+        run: ./Move-LlvmBuild.ps1
+        shell: pwsh
+
+      - name: Publish LLVM binaries
+        uses: actions/upload-artifact@v1
+        with:
+          name: win-x64
+          path: ./llvm/win-x64
+
+  build_llvm_linux:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Build LLVM
+        run: ./Build-Llvm.ps1
+        shell: pwsh
+
+      - name: Move LLVM binaries
+        run: ./Move-LlvmBuild.ps1
+        shell: pwsh
+
+      - name: Publish LLVM binaries
+        uses: actions/upload-artifact@v1
+        with:
+          name: linux-x64
+          path: ./llvm/linux-x64
+
+  build_llvm_macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Build LLVM
+        run: ./Build-Llvm.ps1
+        shell: pwsh
+
+      - name: Move LLVM binaries
+        run: ./Move-LlvmBuild.ps1
+        shell: pwsh
+
+      - name: Publish LLVM binaries
+        uses: actions/upload-artifact@v1
+        with:
+          name: osx-x64
+          path: ./llvm/osx-x64
+
+
