@@ -94,27 +94,33 @@ if ($IsLinux) {
     $libIncFilter = @("*.a", "*.dylib")
 }
 
-$libSource = (Join-Path ($BuildRoot) ($BuildName) ($sourceConfiguration) "lib")
-$libDest = (Join-Path ($destBase) "lib")
-Write-Verbose "Moving built libraries from $($libSource) to $($libDest)"
-Move-Tree $libSource $libDest ($libIncFilter)
+$buildOutput = Join-Path $BuildRoot $BuildName $sourceConfiguration
+Move-Tree $buildOutput $destBase
 
-$inc2Source = (Join-Path (Split-Path $BuildRoot -Parent) "include")
-$inc2Dest = (Join-Path ($destbase) "include")
-$inc2Exclude = @( '*.txt')
-Write-Verbose "Moving headers from $($inc2Source) to $($inc2Dest)"
-Copy-Tree $inc2Source $inc2Dest -exclude ($inc2Exclude)
+$buildNativeOutput = Join-Path $BuildRoot $BuildName NATIVE $sourceConfiguration
+Move-Tree $buildNativeOutput $destBase
 
-$incSource = (Join-Path ($BuildRoot) ($BuildName) "include")
-$incDest = (Join-Path ($destbase) "include")
-$incFilter = @( '*.h', '*.gen', '*.def', '*.inc' )
-Write-Verbose "Moving headers from $($incSource) to $($incDest)"
-Copy-Tree $incSource $incDest ($incFilter)
+# $libSource = (Join-Path ($BuildRoot) ($BuildName) ($sourceConfiguration) "lib")
+# $libDest = (Join-Path ($destBase) "lib")
+# Write-Verbose "Moving built libraries from $($libSource) to $($libDest)"
+# Move-Tree $libSource $libDest ($libIncFilter)
 
-$cfgSource = (Join-Path $BuildRoot ($BuildName) "NATIVE" "include" "llvm" "Config")
-$cfgDest = (Join-Path ($destbase) "include" "llvm" "Config")
-Write-Verbose "Moving config headers from $($cfgSource) to $($cfgDest)"
-Copy-Tree $cfgSource $cfgDest
+# $inc2Source = (Join-Path (Split-Path $BuildRoot -Parent) "include")
+# $inc2Dest = (Join-Path ($destbase) "include")
+# $inc2Exclude = @( '*.txt')
+# Write-Verbose "Moving headers from $($inc2Source) to $($inc2Dest)"
+# Copy-Tree $inc2Source $inc2Dest -exclude ($inc2Exclude)
+
+# $incSource = (Join-Path ($BuildRoot) ($BuildName) "include")
+# $incDest = (Join-Path ($destbase) "include")
+# $incFilter = @( '*.h', '*.gen', '*.def', '*.inc' )
+# Write-Verbose "Moving headers from $($incSource) to $($incDest)"
+# Copy-Tree $incSource $incDest ($incFilter)
+
+# $cfgSource = (Join-Path $BuildRoot ($BuildName) "NATIVE" "include" "llvm" "Config")
+# $cfgDest = (Join-Path ($destbase) "include" "llvm" "Config")
+# Write-Verbose "Moving config headers from $($cfgSource) to $($cfgDest)"
+# Copy-Tree $cfgSource $cfgDest
 
 # Write-Verbose "Copying OrcCBindingsStack.h"
 # $orcSource = (Join-Path $PSScriptRoot "llvm-project" "llvm" "lib" "ExecutionEngine" "Orc" "OrcCBindingsStack.h")
